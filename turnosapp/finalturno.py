@@ -127,7 +127,8 @@ def finalturno(request):
             ultimo_id = Turnos.objects.latest('id')
             chc_instance = Chc.objects.get(id=chc_id_value)
             aplicarcambio = aplicarcambio.update( **{horadatabasevalue: "C" })
-            agregar_relacion = PacienteTurnoMedico(turnos_id = ultimo_id, tblhmed_id = tblhmed_instance, chc_id = chc_instance, is_active = True)
+	    
+            agregar_relacion = PacienteTurnoMedico(turnos = ultimo_id, tblhmed = tblhmed_instance, chc = chc_instance, is_active = True)
             agregar_relacion.save()
 
         else:

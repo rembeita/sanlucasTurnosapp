@@ -13,6 +13,7 @@ from django.core.wsgi import get_wsgi_application
 
 
 sys.path.append('/home/produccion/sanlucas')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sanlucas.settings")
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sanlucas.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "sanlucas.settings"
 
 application = get_wsgi_application()

@@ -24,6 +24,8 @@ def elegirTurno(request):
 	returnValue=""
 	if request.method == 'POST':
 		formvar = request.POST
+		if (formvar.has_key('datosturnos')):
+			print "ENTRO POR TURNOS"
 		if (formvar.has_key('accion')):
 			avance = int(formvar['avance'])
 			accion = str(formvar['accion'])

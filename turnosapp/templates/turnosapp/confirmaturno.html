@@ -12,7 +12,7 @@
 <!-- Start Formoid form-->
 <link rel="stylesheet" href="/static/formoid-solid-blue.css" type="text/css" />
 <script type="text/javascript" src="/static/jquery.min.js"></script>
-<form class="formoid-solid-blue" style="background-color:#FFFFFF;font-size:14px;font-family:'Roboto',Arial,Helvetica,sans-serif;color:#34495E;max-width:480px;min-width:150px" method="post" action="/turnosapp/cierreturno/">
+<form class="formoid-solid-blue" style="background-color:#FFFFFF;font-size:14px;font-family:'Roboto',Arial,Helvetica,sans-serif;color:#34495E;max-width:600px;min-width:300px" method="post" action="/turnosapp/cierreturno/">
         {% csrf_token %}
 	<div class="title">
 		<h2>Sistema de Turnos</h2>
@@ -36,9 +36,8 @@
 	<div class="title3">
 		<h4>Turnos Disponibles</h4>
 	</div>
-	<div class="element-input"> 
-			<label class="title"></label> 
-				<div class="item-cont" align="center">
+	<div> 
+				<div align="center">
 				     <table>
 		                        {% for key, value in dicMedicoLibre %}
                 		                {% cycle '<tr>' '' '' '' %}

@@ -1427,21 +1427,9 @@ bootstrap
   width: 16px;
   height: 16px;
 }
-
-#botonmedico
-{
-
-border: 0; 
-background: green; 
-/*background-color: #4de045; */
-color: white; 
-padding: 10px 20px 10px 10px; 
-border-radius: 4px;
-
-}
-
 .tableCalendar {
-        margin:0px;padding:0px;
+        margin:0px;
+	padding:0px;
         width:90%;
         border:1px solid #000000;
 
@@ -1577,5 +1565,22 @@ border-radius: 4px;
   background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
   background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
   background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+#botonmedico {
+  -webkit-border-radius: 39;
+  -moz-border-radius: 39;
+  border-radius: 39px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  background: #057a16;
+  padding: 15px 20px 15px 15px;
+  text-decoration: none;
+}
+
+#botonmedico:hover {
+  background: #0bba25;
   text-decoration: none;
 }
