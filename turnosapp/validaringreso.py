@@ -12,6 +12,7 @@ from .models import Chc
 from .models import Turnos
 from .models import Dres
 from .models import Espec
+from .models import PacienteTurnoMedico
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -89,6 +90,30 @@ def validaringreso(request):
 			print ValueError
 			pass
 	print dicmedicotmp
+	# Armo diccionario para mostrar en la vista con los turnos ya tomados.
+	print "########" + idpaciente
+	relacion_paciente = PacienteTurnoMedico.objects.all().filter(is_active = 1).filter(chc_id_id = idpaciente)
+	lista_diccionario_turnos = []
+	turnos_tomados = {}
+	for i in relacion_paciente.values():
+		#obtengo dia y hora
+		obtener_datos_turnos = Turnos.objects.all().filter(id = i['turnos_id_id'])
+		turnos_tomados['hora'] = obtener_datos_turnos.values("hora_tur")[0]["hora_tur"]
+		turnos_tomados['dia'] = obtener_datos_turnos.values("dia_tur")[0]["dia_tur"]
+
+		#obtengo el nombre del medico
+		numero_doctor = obtener_datos_turnos.values("nro_doc")[0]["nro_doc"]
+		numero_doctor = formatear_id_medico(numero_doctor)
+		obtener_datos_medico = Dres.objects.all().filter(cod_med = numero_doctor)
+		turnos_tomados['nom_medico'] = obtener_datos_medico.values("nombre")[0]["nombre"]
+		
+		#obtengo la especialidad
+		valor_esp = formatear_id_medico(str(obtener_datos_turnos.values("cod_esp")[0]["cod_esp"]))
+		turnos_tomados["especialidad"] = Espec.objects.all().filter(cod_esp = valor_esp).values("nom_esp")[0]["nom_esp"]
+		lista_diccionario_turnos.append(turnos_tomados.copy())
+
+
+	
 	if not dicmedicotmp:
 		print "NOvalido DICIONARIO"
 		mensaje = "No se encontraron medicos registrados." 
@@ -98,5 +123,6 @@ def validaringreso(request):
 		return render(request, 'turnosapp/novalidaingreso.html', context)
 	
 	context["DICMEDICOTMP"] = dicmedicotmp
+	context["DICTURNOSTOMADOS"] = lista_diccionario_turnos
 
 	return render(request, 'turnosapp/validaingreso.html', context)

@@ -2891,7 +2891,19 @@ class Youtube(models.Model):
         db_table = 'youtube'
 
 
-
+class PacienteTurnoMedico(models.Model):
+    auto_increment_id = models.AutoField(primary_key=True)
+    turnos_id = models.ForeignKey(Turnos)
+    tblhmed_id = models.ForeignKey(Tblhmed)
+    chc_id = models.ForeignKey(Chc)
+    is_active = models.BooleanField(default=True)
+#     
+#class Paciente_Turno_Medico(models.Model):
+#    auto_increment_id = models.AutoField(primary_key=True)
+#    turnos_id = models.ForeignKey(Turnos)
+#    tblhmed_id = models.ForeignKey(Tblhmed)
+#    chc_id = models.ForeignKey(Chc)
+#    is_active = models.BooleanField(default=True)
 
 
 class Entry(models.Model):

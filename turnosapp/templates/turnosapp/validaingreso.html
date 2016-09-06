@@ -12,9 +12,10 @@
 
 
 <!-- Start Formoid form-->
-<link rel="stylesheet" href="/static/formoid-solid-blue.css" type="text/css" />
+<link rel="stylesheet" href="/static/formoid-solid-blue-validar.css" type="text/css" />
+<link rel="stylesheet" href="/static/table_validar.css" type="text/css" />
 <script type="text/javascript" src="/static/jquery.min.js"></script>
-<form class="formoid-solid-blue" style="background-color:#FFFFFF;font-size:14px;font-family:'Roboto',Arial,Helvetica,sans-serif;color:#34495E;max-width:480px;min-width:150px" method="post" action="/turnosapp/elegirTurno/">
+<form class="formoid-solid-blue" style="background-color:#FFFFFF;font-size:14px;font-family:'Roboto',Arial,Helvetica,sans-serif;color:#34495E;max-width:800px;min-width:150px" method="post" action="/turnosapp/elegirTurno/">
         {% csrf_token %}
 	<div class="title">
 		<h2>Sistema de Turnos</h2>
@@ -26,22 +27,60 @@
 		<input type="hidden" name="dnipaciente" value="{{ DNIPACIENTE }}">
 	</div>
 	<div class="title3">
-		<h4>Seleccione Medico</h4>
+		<h4>Turnos Tomados</h4>
 	</div>
+	<div>
+    <table id="keywords" cellspacing="0" cellpadding="0">
+    <thead>
+      <tr>
+        <th><span>Hora</span></th>
+        <th><span>Dia</span></th>
+        <th><span>Medico</span></th>
+        <th><span>Especialidad</span></th>
+        <th><span></span></th>
+      </tr>
+    </thead>
+    <tbody>
+		{% for turnos in DICTURNOSTOMADOS %}
+					 
+				<tr>
+					<td class="lalign"> {{ turnos.hora }} </td> 
+					<td> {{ turnos.dia }} </td>
+					<td> {{ turnos.nom_medico }} </td>
+					<td> {{ turnos.especialidad }} </td>
+					<td>
+					 <button name="datosturnos" type="submit" class="button-validar"  value="{{ turnos.hora }} || {{ turnos.dia }} || {{ turnos.nom_medico }} || {{ turnos.especialidad }}" > Eliminar </button>
+					</td>
+				</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+	</div>
+	<div class="title3">
+		<h4>Reservar Turno</h4>
+	</div>
+    <table id="keywords" cellspacing="0" cellpadding="0">
+    <thead>
+      <tr>
+        <th><span>Medico</span></th>
+        <th><span>Especialidad</span></th>
+        <th><span></span></th>
+      </tr>
+    </thead>
+    <tbody>
                 {% for key, value in DICMEDICOTMP.iteritems %}
-	<div class="element-input"> 
-			<label class="title"></label> 
-				<div class="item-cont" align="center">
-					<button name="datosmedico" type="submit"id="botonmedico"  value="{{ value.1 }} || {{value.3}} || {{value.0 }} || {{value.4}}" >
-					{{ value.1 }} || {{value.3}}						 
-					</button>
-				</div>
-	
-	</div>
+		<tr>
+		<td class="lalign"> {{ value.1 }} </td>
+		<td> {{ value.3 }} </td>
+		<td><button name="datosmedico" class="button-validar"  value="{{ value.1 }} || {{value.3}} || {{value.0 }} || {{value.4}}" >
+		Reservar
+		</td>
+		</tr>
                 {% endfor %} 
-
+   </tbody>
+   </table>
 <div class="submit">
-	<input type="submit" name="return" value="Salir">
+	<input type="submit" name="return" class="button-validar" value="Salir">
 </div>
 
 </form>

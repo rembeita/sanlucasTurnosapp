@@ -14,6 +14,7 @@ from .models import Dres
 from .models import Espec
 from .models import Tblhmed
 from .models import Turcons
+from .models import PacienteTurnoMedico
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -56,7 +57,8 @@ def finalturno(request):
 
     aplicarcambio = Tblhmed.objects.all().filter( medico = codmedvalue )
     aplicarcambio = aplicarcambio.filter( fecha = fechaDatabase )
-    
+    tblhmed_iden = aplicarcambio.values("id")[0]["id"]
+    tblhmed_instance = Tblhmed.objects.get(id=tblhmed_iden)
 
     chc_info = Chc.objects.all().filter(nro_doc = dnipacientevalue)
     chc_id_value = str(chc_info.values("id")[0]["id"])
@@ -122,8 +124,12 @@ def finalturno(request):
                     frec='0', importe='0.00', coseg='0.00', \
                     dia_modi=dia_actual, hs_modi=hora_actual)
             agregar_turno.save()
+            ultimo_id = Turnos.objects.latest('id')
+            chc_instance = Chc.objects.get(id=chc_id_value)
             aplicarcambio = aplicarcambio.update( **{horadatabasevalue: "C" })
-            
+            agregar_relacion = PacienteTurnoMedico(turnos_id = ultimo_id, tblhmed_id = tblhmed_instance, chc_id = chc_instance, is_active = True)
+            agregar_relacion.save()
+
         else:
             mensaje = "No se pudo confirmar el turno o el mismo se encuentra ocupado. Favor de volver a intentar."
             color   = "red"
