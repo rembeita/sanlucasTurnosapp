@@ -32,8 +32,11 @@ def validaringreso(request):
 			datos_turnos = str(formvar['datosturnos'])
 			hora_eliminar, id_relacion = datos_turnos.split("||")
 			hora_eliminar = hora_eliminar.replace(":","")
-			if (int(hora_eliminar) < 1000):
-				hora_eliminar = hora_eliminar[1:]
+
+			#Comento las lineas para que grabe el sistema sin modificar la hora.
+#			if (int(hora_eliminar) < 1000):
+#				hora_eliminar = hora_eliminar[1:]
+#				hora_eliminar = hora_eliminar[1:]
 			hora_eliminar = "T"+hora_eliminar
 		        actualizar_turno = PacienteTurnoMedico.objects.get(pk=id_relacion)
 			#actualizar_turno.is_active = False
@@ -46,7 +49,7 @@ def validaringreso(request):
 		 	agregar_turnosdel = Turnosdel(id = ultimo_id_turnosdel, nro_doc = elimt.nro_doc, cod_esp = elimt.cod_esp, dia_tur = elimt.dia_tur, \
 						hora_tur = elimt.hora_tur, dhm_tur = elimt.dhm_tur, id_chc = elimt.id_chc, \
 						o_social = elimt.o_social, nro_afil = elimt.nro_afil, tipo_doc = elimt.tipo_doc, \
-						no_doc = elimt.no_doc, consult = elimt.consult, frec = elimt.consult, usuario = elimt.usuario,\
+						no_doc = elimt.no_doc, consult = elimt.consult, frec = elimt.frec, usuario = elimt.usuario,\
 						ws = elimt.ws, importe = elimt.importe, tel_tur = elimt.tel_tur, plan = elimt.plan, \
 						fecalta = elimt.fecalta, horalta = elimt.horalta, coseg = elimt.coseg, \
 						usu_modi = elimt.usu_modi, ws_modi = elimt.ws_modi, dia_modi = elimt.dia_modi, \
@@ -105,9 +108,16 @@ def validaringreso(request):
 		try:
 			medicotmp = []
 			valor = formatear_id_medico(i)
-			#print "VALOR: " + str(valor) 
+			#print "VALOR: " + str(valor)
+			print(valor) 
+			#doctores_info = Dres.objects.all().filter(cod_med = str(valor)).exclude(tex4 = 'N')
 			doctores_info = Dres.objects.all().filter(cod_med = str(valor))
 			#print "########DOCTORES INFO: " + str(doctores_info.values("nombre")[0]) 
+			print "########DOCTORES INFO: " + str(doctores_info.values("nombre")[0]) 
+			print "########DOCTORES INFO: " + str(doctores_info.values("tex4")[0]) 
+			#Verifico si tiene una N en el campo tex4 y si es el caso lo exceptuo
+			if (str(doctores_info.values("tex4")[0]["tex4"]) == "N"):
+				continue
 			medicotmp.append(valor)
 			#print "###### DOCTORES VALUE: " + str(doctores_info.values("nombre")[0]["nombre"]) 
 			medicotmp.append(str(doctores_info.values("nombre")[0]["nombre"]))

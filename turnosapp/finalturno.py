@@ -56,6 +56,7 @@ def finalturno(request):
     horadatabasevalue = horadatabasevalue.replace(' ','')
 
     aplicarcambio = Tblhmed.objects.all().filter( medico = codmedvalue )
+    aplicarcambio = aplicarcambio.filter( espec = codespvalue )
     aplicarcambio = aplicarcambio.filter( fecha = fechaDatabase )
     tblhmed_iden = aplicarcambio.values("id")[0]["id"]
     tblhmed_instance = Tblhmed.objects.get(id=tblhmed_iden)
@@ -105,11 +106,19 @@ def finalturno(request):
     hora_turno = hora_turno.strftime("%H:%M")
     print("### HORA TURNO")
     print(hora_turno)
+
+    # Verifico si la hora del turno comienza con 0 y la elimino. Solicitud Horacio
+    if (hora_turno[0] == "0"):
+        hora_turno = hora_turno[1:]
+
     dia_actual = time.strftime("%Y-%m-%d")
     hora_actual = time.strftime("%H:%M:%S")
     print(dia_actual)
     if (formvar.has_key('confirmar')):
+	print("entre")
+	print("estadoturno: " + estadoturno)
         if estadoturno == "X":
+	    print("entre2")
             mensaje = "Su turno ha sido confirmado. Muchas Gracias."
             color    = "green"
             agregar_turno = Turnos(nro_doc=codmedvalue, cod_esp=codespvalue, id_chc=chc_id_value, dia_tur=fecha_turno, \
@@ -141,9 +150,26 @@ def finalturno(request):
     
     if (formvar.has_key('confirmareimprimir')):
         if estadoturno == "X":
-            mensaje = "Su turno ha sido confirmado. Muchas Gracias. " 
+            mensaje = "Su turno ha sido confirmado. Muchas Gracias."
             color    = "green"
+            agregar_turno = Turnos(nro_doc=codmedvalue, cod_esp=codespvalue, id_chc=chc_id_value, dia_tur=fecha_turno, \
+                    o_social=chc_os_value, nro_afil=chc_nro_afil_value, \
+                    tipo_doc='DNI', no_doc=dnipacientevalue,hora_tur=hora_turno, \
+                    #dhm_tur=fechaDatabase, consult=str(consultorio), \
+                    dhm_tur=fecha_hora, consult=str(consultorio), \
+                    tel_tur=chc_tele_value, plan=chc_plan_value, observ=observ_value, gravado=chc_gravado_value, \
+                    usuario=dnipacientevalue, ws='WWW', \
+#                    fecalta=str(fechavalue), horalta=str(horavalue))
+                    fecalta=dia_actual, horalta=hora_actual, \
+                    frec='0', importe='0.00', coseg='0.00', \
+                    dia_modi=dia_actual, hs_modi=hora_actual)
+            agregar_turno.save()
+            ultimo_id = Turnos.objects.latest('id')
+            chc_instance = Chc.objects.get(id=chc_id_value)
             aplicarcambio = aplicarcambio.update( **{horadatabasevalue: "C" })
+	    
+            agregar_relacion = PacienteTurnoMedico(turnos = ultimo_id, tblhmed = tblhmed_instance, chc = chc_instance, is_active = True)
+            agregar_relacion.save()
             return render(request, 'turnosapp/finalturnopdf.html', context)
         else:
             mensaje = "No se pudo confirmar el turno o el mismo se encuentra ocupado. Favor de volver a intentar." 
