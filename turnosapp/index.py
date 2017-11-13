@@ -11,6 +11,7 @@ from .models import Chc
 from .models import Turnos
 from .models import Dres
 from .models import Espec
+from .models import Tblhmed
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -18,11 +19,17 @@ from django.http import HttpResponseRedirect
 #from inicio import *
 
 def index(request):
-       template = loader.get_template('turnosapp/index.html')
-       STATIC_URL_ROD = '/static/'
-       context = locals()
-       context['STATIC_URL_ROD'] = STATIC_URL_ROD
+	context = locals()
+	flag = False
 
-       context_instance = RequestContext(request)
-       return render(request, 'turnosapp/index.html', context)
+# Ejemp,o
+#	chc_info = Chc.objects.all().filter(nro_doc = dniPaciente)
+#	idpaciente = str(chc_info.values("id")[0]["id"])
+#	print "##### " + str(idpaciente)
+#	relacion_paciente = PacienteTurnoMedico.objects.all().filter(is_active = 1).filter(chc_id = idpaciente)
+#
+	if (flag == True):
+		return render(request, 'turnosapp/mantenimiento.html', context)
+
+	return render(request, 'turnosapp/index.html', context)
 
