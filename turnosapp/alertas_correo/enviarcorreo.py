@@ -31,20 +31,25 @@ for turno in turnos_list:
 	paciente_email = chc_info.values()[0]['sol_med2']
 	print(paciente_email)
 	print(paciente_nombre)
-	try:
-		if (paciente_email == ""):
-			print("email vacio")
-			continue
-		doctor = Dres.objects.all().filter(cod_med = turno.nro_doc)
-		doctor_nombre = doctor.values()[0]['nombre']
-		print(doctor_nombre)
-		espec = Espec.objects.all().filter(cod_esp = formatear_id_medico(turno.cod_esp))
-		espec_nombre = espec.values()[0]['nom_esp']
-		print(espec_nombre)
-		#send_mail('Recordatorio de turno', 'Estimado ' + paciente_nombre+ '.\n Le informamos que usted posee un turno el dia ' + tomorrow_day + ' a las ' + turno.hora_tur + ' con el medico ' + doctor_nombre + ' por la especialidad ' + espec_nombre + '.', 'turnos@sanlucas.com.ar', [paciente_email], fail_silently=False)
-		print("ENVIANDOOOOOOO")
-		send_mail('Recordatorio de turno', 'Estimado/a ' + paciente_nombre+ '.\nLe informamos que usted posee un turno el dia ' + str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur + ' con el medico/a ' + doctor_nombre + '\nLa especialidad por la cual sera atendido/a es ' + espec_nombre + '.\nSi desea cancelar el turno puede hacerlo via web mediante la direccion http://www.sanlucas.com.ar/turnosapp las 24hs o por telefono a los siguientes numeros XXXX-XXXX y XXXX-XXXX en los horarios de 8 a 20hs.', 'turnos@sanlucas.com.ar', ['rembeita@gmail.com'], fail_silently=False)
-	except:
+#	try:
+	#if (paciente_email == ""):
+	if (paciente_email.count("@") < 1):
+		print("email vacio")
 		continue
+	print("Tiene email")
+	doctor = Dres.objects.all().filter(cod_med = formatear_id_medico(turno.nro_doc))
+	print(dir(doctor))
+	print(doctor.values())
+	doctor_nombre = doctor.values()[0]['nombre']
+	print("no llegue")
+	print(doctor_nombre)
+	espec = Espec.objects.all().filter(cod_esp = formatear_id_medico(turno.cod_esp))
+	espec_nombre = espec.values()[0]['nom_esp']
+	print(espec_nombre)
+	#send_mail('Recordatorio de turno', 'Estimado ' + paciente_nombre+ '.\n Le informamos que usted posee un turno el dia ' + tomorrow_day + ' a las ' + turno.hora_tur + ' con el medico ' + doctor_nombre + ' por la especialidad ' + espec_nombre + '.', 'turnos@sanlucas.com.ar', [paciente_email], fail_silently=False)
+	print("ENVIANDOOOOOOO")
+	send_mail('Recordatorio Turno San Lucas - ' +str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur, 'Estimado/a ' + paciente_nombre+ '.\nLe informamos que usted posee un turno el dia ' + str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur + ' con el medico/a ' + doctor_nombre + '\nLa especialidad por la cual sera atendido/a es ' + espec_nombre + '.\nSi desea cancelar el turno puede hacerlo via web mediante la direccion http://www.sanlucas.com.ar/turnosapp las 24hs o por telefono a los siguientes numeros 4732-8888 o 4874-3600  en los horarios de 8 a 20hs.\n\n\nPor favor no responder a esta dirección de email. Ante cualquier consulta comuníquese con nosotros.', 'turnos@sanlucas.com.ar', ['rembeita@gmail.com'], fail_silently=False)
+#	except:
+#		continue
 		
 
