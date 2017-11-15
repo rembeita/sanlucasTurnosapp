@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-
 from django.db import connection
 # Create your views here.
-
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.views.generic import RedirectView
-
 from .models import Chc
 from .models import Turnos
 from .models import Turnosdel
@@ -15,9 +12,10 @@ from .models import Dres
 from .models import Espec
 from .models import PacienteTurnoMedico
 from .models import Tblhmed
-
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from datetime import datetime, timedelta
+import time
 
 
 def formatear_id_medico(idmedico):
@@ -143,13 +141,19 @@ def validaringreso(request):
 	relacion_paciente = PacienteTurnoMedico.objects.all().filter(is_active = 1).filter(chc_id = idpaciente)
 	lista_diccionario_turnos = []
 	turnos_tomados = {}
+	today = datetime.now()
+	today = str(today.year) + '-' + str(today.month) + '-' + str(today.day)
 	for i in relacion_paciente.values():
 		turnos_tomados['id_relacion'] = i['auto_increment_id']
 		#obtengo dia y hora
 		obtener_datos_turnos = Turnos.objects.all().filter(id = i['turnos_id'])
 		turnos_tomados['hora'] = obtener_datos_turnos.values("hora_tur")[0]["hora_tur"]
 		turnos_tomados['dia'] = obtener_datos_turnos.values("dia_tur")[0]["dia_tur"]
-
+		#Si la fecha del turno es igual a hoy no muestro
+		fecha1 = time.strptime(today, "%Y-%m-%d")
+		fecha2 = time.strptime(str(turnos_tomados['dia']), "%Y-%m-%d")
+		if ( fecha1 >= fecha2 ):
+			continue
 		#obtengo el nombre del medico
 		numero_doctor = obtener_datos_turnos.values("nro_doc")[0]["nro_doc"]
 		numero_doctor = formatear_id_medico(numero_doctor)
