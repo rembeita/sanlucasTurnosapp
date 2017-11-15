@@ -115,3 +115,6 @@ STATICFILES_DIRS = ('/home/sebastian/desarrollo/sanlucas/turnosapp/templates/tur
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.join(PROJECT_ROOT, 'sanlucas'))
 
+EMAIL_HOST = '192.168.0.207'
+
+

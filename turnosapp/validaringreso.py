@@ -23,6 +23,7 @@ def formatear_id_medico(idmedico):
 	return (" " * resultado) + idmedico
 
 def validaringreso(request):
+	context = locals()
 	if request.method == 'POST':
 		formvar = request.POST
 		#Si apreto el boton eliminar busco las tablas y las elimino
@@ -59,6 +60,7 @@ def validaringreso(request):
 			cursor.execute("update tblhmed set "+ hora_eliminar + " = \"X\" where id = " + str(actualizar_turno.tblhmed_id))
 			actualizar_turno.delete()
 			elimt.delete()
+			context['MENSAJE'] = 'Usted ha liberado el turno. No podrá presentarse en el consultorio.'
 
 		formvar = request.POST
 		documentovalue = str(formvar['documento'])
@@ -66,14 +68,11 @@ def validaringreso(request):
 	chc_info = Chc.objects.all().filter(nro_doc = documentovalue)
 	chc_info = chc_info.filter(tele__contains = telefonovalue)
 	dicmedicos = {}
-	context = locals()
 
 	if not chc_info:
 		print "NOvalido"
-		mensaje = "Paciente NO registrado o Clave Incorrecta."
-		mensaje2 = "Solicite turno telefonicamente."
-		context['MENSAJE'] = mensaje
-		context['MENSAJE2'] = mensaje2
+		context['MENSAJE'] = "Paciente NO registrado o Clave Incorrecta."
+		context['MENSAJE2'] = "Solicite turno telefonicamente."
 		return render(request, 'turnosapp/novalidaingreso.html', context)
 
 
