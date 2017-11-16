@@ -4,6 +4,7 @@ from turnosapp.models import Turnos
 from turnosapp.models import Dres
 from turnosapp.models import Espec
 from datetime import datetime, timedelta
+from django.core.mail import EmailMessage
 
 
 def formatear_id_medico(idmedico):
@@ -31,8 +32,6 @@ for turno in turnos_list:
 	paciente_email = chc_info.values()[0]['sol_med2']
 	print(paciente_email)
 	print(paciente_nombre)
-#	try:
-	#if (paciente_email == ""):
 	if (paciente_email.count("@") < 1):
 		print("email vacio")
 		continue
@@ -46,10 +45,13 @@ for turno in turnos_list:
 	espec = Espec.objects.all().filter(cod_esp = formatear_id_medico(turno.cod_esp))
 	espec_nombre = espec.values()[0]['nom_esp']
 	print(espec_nombre)
-	#send_mail('Recordatorio de turno', 'Estimado ' + paciente_nombre+ '.\n Le informamos que usted posee un turno el dia ' + tomorrow_day + ' a las ' + turno.hora_tur + ' con el medico ' + doctor_nombre + ' por la especialidad ' + espec_nombre + '.', 'turnos@sanlucas.com.ar', [paciente_email], fail_silently=False)
+	email = EmailMessage('Recordatorio Turno San Lucas - ' +str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur, 'Estimado/a ' + paciente_nombre+ '.\nLe informamos que usted posee un turno el dia ' + str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur + ' con el profesional ' + doctor_nombre + '\nLa especialidad por la cual sera atendido/a es ' + espec_nombre + '.\nSi desea cancelar el turno puede hacerlo via web mediante la direccion http://www.sanlucas.com.ar/turnosapp las 24hs o por telefono al numero 011-5298-6350 en los horarios de 8 a 20hs.\n\n\nPor favor no responder a esta dirección de email. Ante cualquier consulta comuníquese con nosotros.', 'turnos@sanlucas.com.ar', [ paciente_email ], [''], reply_to=['turnos@sanlucas.com.ar'], headers={'Message-ID': 'foo'})
+	img_data = open('/home/produccion/sanlucas/turnosapp/alertas_correo/firma.png', 'rb').read()
+	email.attach('firma.png', img_data, 'image/png')
+	email.send(fail_silently=False) 
 	print("ENVIANDOOOOOOO")
-	send_mail('Recordatorio Turno San Lucas - ' +str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur, 'Estimado/a ' + paciente_nombre+ '.\nLe informamos que usted posee un turno el dia ' + str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur + ' con el profesional ' + doctor_nombre + '\nLa especialidad por la cual sera atendido/a es ' + espec_nombre + '.\nSi desea cancelar el turno puede hacerlo via web mediante la direccion http://www.sanlucas.com.ar/turnosapp las 24hs o por telefono al numero 011-5298-6350 en los horarios de 8 a 20hs.\n\n\nPor favor no responder a esta dirección de email. Ante cualquier consulta comuníquese con nosotros.', 'turnos@sanlucas.com.ar', [paciente_email], fail_silently=False)
-#	except:
-#		continue
-		
+	#send_mail('Recordatorio Turno San Lucas - ' +str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur, 'Estimado/a ' + paciente_nombre+ '.\nLe informamos que usted posee un turno el dia ' + str(tomorrow.day) + '/'+ str(tomorrow.month)+' a las ' + turno.hora_tur + ' con el profesional ' + doctor_nombre + '\nLa especialidad por la cual sera atendido/a es ' + espec_nombre + '.\nSi desea cancelar el turno puede hacerlo via web mediante la direccion http://www.sanlucas.com.ar/turnosapp las 24hs o por telefono al numero 011-5298-6350 en los horarios de 8 a 20hs.\n\n\nPor favor no responder a esta dirección de email. Ante cualquier consulta comuníquese con nosotros.', 'turnos@sanlucas.com.ar', [paciente_email], fail_silently=False)
+
+
+
 

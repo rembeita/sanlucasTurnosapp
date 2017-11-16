@@ -150,7 +150,7 @@ def finalturno(request):
     
     if (formvar.has_key('confirmareimprimir')):
         if estadoturno == "X":
-            mensaje = "Su turno ha sido confirmado. Muchas Gracias."
+            mensaje = "Su turno ha sido confirmado. Debera esperar 24hs antes de poder realizar cambios. Muchas Gracias."
             color    = "green"
             agregar_turno = Turnos(nro_doc=codmedvalue, cod_esp=codespvalue, id_chc=chc_id_value, dia_tur=fecha_turno, \
                     o_social=chc_os_value, nro_afil=chc_nro_afil_value, \

@@ -60,7 +60,7 @@ def validaringreso(request):
 			cursor.execute("update tblhmed set "+ hora_eliminar + " = \"X\" where id = " + str(actualizar_turno.tblhmed_id))
 			actualizar_turno.delete()
 			elimt.delete()
-			context['MENSAJE'] = 'Usted ha liberado el turno. No podrá presentarse en el consultorio.'
+			context['MENSAJE'] = 'Usted ha liberado el turno. Recuerde que no podrá presentarse en el consultorio para esa fecha.'
 
 		formvar = request.POST
 		documentovalue = str(formvar['documento'])
@@ -149,9 +149,14 @@ def validaringreso(request):
 		turnos_tomados['hora'] = obtener_datos_turnos.values("hora_tur")[0]["hora_tur"]
 		turnos_tomados['dia'] = obtener_datos_turnos.values("dia_tur")[0]["dia_tur"]
 		#Si la fecha del turno es igual a hoy no muestro
-		fecha1 = time.strptime(today, "%Y-%m-%d")
+		hoy = time.strptime(today, "%Y-%m-%d")
 		fecha2 = time.strptime(str(turnos_tomados['dia']), "%Y-%m-%d")
-		if ( fecha1 >= fecha2 ):
+		if ( hoy >= fecha2 ):
+			continue
+
+		fecha_alta = obtener_datos_turnos.values("fecalta")[0]["fecalta"]
+		fecha_alta = time.strptime(str(fecha_alta), "%Y-%m-%d")
+		if ( hoy == fecha_alta ):
 			continue
 		#obtengo el nombre del medico
 		numero_doctor = obtener_datos_turnos.values("nro_doc")[0]["nro_doc"]
