@@ -113,7 +113,7 @@ def validaringreso(request):
 			print "########DOCTORES INFO: " + str(doctores_info.values("nombre")[0]) 
 			print "########DOCTORES INFO: " + str(doctores_info.values("tex4")[0]) 
 			#Verifico si tiene una N en el campo tex4 y si es el caso lo exceptuo
-			if (str(doctores_info.values("tex4")[0]["tex4"]) == "N"):
+			if (str(doctores_info.values("tex4")[0]["tex4"]).replace(" ", "") == "N"):
 				cont += 1
 				continue
 			medicotmp.append(valor)
