@@ -12,6 +12,7 @@ from .models import Dres
 from .models import Espec
 from .models import PacienteTurnoMedico
 from .models import Tblhmed
+from .models import Empresa
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from datetime import datetime, timedelta
@@ -73,6 +74,17 @@ def validaringreso(request):
 		print "NOvalido"
 		context['MENSAJE'] = "Paciente NO registrado o Clave Incorrecta."
 		context['MENSAJE2'] = "Solicite turno telefonicamente."
+		return render(request, 'turnosapp/novalidaingreso.html', context)
+
+
+	cod_empresa =  str(chc_info.values("cod_chc")[0]["cod_chc"])
+	print(cod_empresa)
+	empresa_info = Empresa.objects.all().filter(cod_emp = cod_empresa).filter(suspend__icontains = "S")
+	print(empresa_info)
+	if empresa_info:
+		print "NOvalido"
+		context['MENSAJE'] = "Su obra social no se encuentra habilitada para solicitar turnos."
+		context['MENSAJE2'] = "Favor de contactar a su obra social."
 		return render(request, 'turnosapp/novalidaingreso.html', context)
 
 

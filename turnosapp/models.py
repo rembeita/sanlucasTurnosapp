@@ -799,7 +799,7 @@ class Employeeterritories(models.Model):
 
 
 class Empresa(models.Model):
-    cod_emp = models.CharField(db_column='COD_EMP', max_length=4)  # Field name made lowercase.
+    cod_emp = models.CharField(db_column='COD_EMP', max_length=4, primary_key=True)  # Field name made lowercase.
     denomin = models.CharField(db_column='DENOMIN', max_length=30)  # Field name made lowercase.
     direcc = models.CharField(db_column='DIRECC', max_length=28)  # Field name made lowercase.
     localid = models.CharField(db_column='LOCALID', max_length=25)  # Field name made lowercase.
