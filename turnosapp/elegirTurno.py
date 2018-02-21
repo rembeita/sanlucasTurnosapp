@@ -12,6 +12,7 @@ from .models import Tblhmed
 from .models import PacienteTurnoMedico
 from .models import Chc
 from .models import Turnos
+from .models import Dremplan
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -19,6 +20,12 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q
 
 from datetime import timedelta
+
+
+def formatear_id_medico(idmedico):
+        resultado = 4 - len(idmedico)
+        return (" " * resultado) + idmedico
+
 
 def elegirTurno(request):
 	import calendar
@@ -59,6 +66,8 @@ def elegirTurno(request):
 
 	chc_info = Chc.objects.all().filter(nro_doc = dniPaciente)
 	idpaciente = str(chc_info.values("id")[0]["id"])
+	emp_paciente = str(chc_info.values("cod_chc")[0]["cod_chc"])
+	plan_paciente = str(chc_info.values("plan")[0]["plan"])
 	print "##### " + str(idpaciente)
 	relacion_paciente = PacienteTurnoMedico.objects.all().filter(is_active = 1).filter(chc_id = idpaciente)
         lista_diccionario_turnos = []
@@ -73,6 +82,26 @@ def elegirTurno(request):
                 	context['MENSAJE2'] = mensaje2
 			return render(request, 'turnosapp/novalidaingreso.html', context)
 
+
+	codMedicoFormateado = formatear_id_medico(codMedico)
+	emp_pacienteFormateado = formatear_id_medico(emp_paciente)
+	print("este es medico " +  codMedicoFormateado)
+	print("este es emp_paciente " +  emp_pacienteFormateado)
+	print("este es plan " +  plan_paciente)
+	todos = "TODOS"
+#	dremplan_1 = Dremplan.objects.all().filter( cod_med = codMedicoFormateado ).filter(cod_emp = emp_paciente).filter( plan = "TODOS")
+	dremplan_1 = Dremplan.objects.all().filter( cod_med__contains = codMedicoFormateado ).filter( cod_emp__contains = emp_paciente ).filter(plan__icontains = "TODOS")
+	print(dremplan_1)
+	print("este es dremplan_1 " + str(dremplan_1))
+	dremplan_2 = Dremplan.objects.all().filter( cod_med__contains = codMedicoFormateado ).filter(cod_emp__contains = emp_paciente).filter( plan__icontains = plan_paciente)
+	print("este es dremplan_2 " + str(dremplan_2) )
+	if ( not dremplan_1  and not dremplan_2 ):
+		mensaje = "El profesional dejo de atender su obra social/prepaga."
+	        mensaje2 = ""
+		context = locals()
+                context['MENSAJE'] = mensaje
+                context['MENSAJE2'] = mensaje2
+		return render(request, 'turnosapp/novalidaingreso.html', context)
 
 #	year=now.year -1
 	year=now.year 

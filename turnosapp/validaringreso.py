@@ -81,7 +81,17 @@ def validaringreso(request):
 	print(cod_empresa)
 	empresa_info = Empresa.objects.all().filter(cod_emp = cod_empresa).filter(suspend__icontains = "S")
 	print(empresa_info)
+	cod_osde = "079"
 	if empresa_info:
+		print "NOvalido"
+		context['MENSAJE'] = "Su obra social no se encuentra habilitada para solicitar turnos."
+		context['MENSAJE2'] = "Favor de contactar a su obra social."
+		return render(request, 'turnosapp/novalidaingreso.html', context)
+
+	print(cod_empresa)
+	print(cod_osde)
+	print(cod_empresa.find(cod_osde))
+	if cod_empresa.find(cod_osde) >= 0:
 		print "NOvalido"
 		context['MENSAJE'] = "Su obra social no se encuentra habilitada para solicitar turnos."
 		context['MENSAJE2'] = "Favor de contactar a su obra social."
